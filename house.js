@@ -3,6 +3,8 @@ let ctx = canvas.getContext("2d");
 let residentX = canvas.width/2;
 let residentY = canvas.height-30;
 
+let fireOut = false;
+
 let upPressed = false;
 let downPressed = false;
 let rightPressed = false;
@@ -18,11 +20,12 @@ function drawResident() {
 }
 
 function drawFire() {
-  ctx.fillStyle = "#7C0A02";
-  ctx.fillRect(canvas.width/2, canvas.height/2, 10, 10);
-  // ctx.strokeRect(50,50,50,50);
-  // ctx.fill();
-  
+  if(!fireOut) {
+    ctx.fillStyle = "#7C0A02";
+    ctx.fillRect(canvas.width/2, canvas.height/2, 10, 10);
+    // ctx.strokeRect(50,50,50,50);
+    // ctx.fill();
+  }
 }
 
 function drawExtinguisherCone() {
@@ -41,6 +44,7 @@ function drawExtinguisherCone() {
   // ctx.fillRect(residentX-50, residentY-60, 10, 10);
   // ctx.fillRect(residentX+50, residentY-20, 10, 10);
 }
+
 
 document.addEventListener("keydown", keyDownHandler, false);
 document.addEventListener("keyup", keyUpHandler, false);
@@ -83,12 +87,22 @@ function move() {
   }
 }
 
+function extinguish() {
+  // residentX, residentY-40
+  // residentX-25, residentY-30 && residentX+25, residentY-30
+  if(residentX-15 < canvas.width/2 && canvas.width/2 < residentX+15 && residentY-35 < canvas.height/2 && canvas.height/2 < residentY) {
+    fireOut = true;
+  }
+}
+
 function draw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   drawResident();
   drawFire();
   drawExtinguisherCone();
+  extinguish();
   move();
 }
 
 setInterval(draw, 30)
+
