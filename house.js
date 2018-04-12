@@ -8,31 +8,38 @@ let downPressed = false;
 let rightPressed = false;
 let leftPressed = false;
 
+// TODO: Fix the unexpected color behavior
 function drawResident() {
   ctx.beginPath();
   ctx.arc(residentX, residentY, 10, 0, Math.PI*2);
-  ctx.fillStyle = "#7C0A02";
+  ctx.fillStyle = "Green";
   ctx.fill();
   ctx.closePath();
 }
 
 function drawFire() {
+  ctx.fillStyle = "#7C0A02";
   ctx.fillRect(canvas.width/2, canvas.height/2, 10, 10);
-  ctx.fillStyle = "Green";
   // ctx.strokeRect(50,50,50,50);
-  ctx.fill();
+  // ctx.fill();
+  
 }
 
 function drawExtinguisherCone() {
   ctx.beginPath();
   ctx.moveTo(residentX, residentY-5);
   ctx.lineTo(residentX-25, residentY-30);
+  ctx.lineTo(residentX-15, residentY-35);
+  ctx.lineTo(residentX, residentY-40);
+  ctx.lineTo(residentX+15, residentY-35);
   ctx.lineTo(residentX+25, residentY-30);
-  // ctx.moveTo(75, 50);
-  // ctx.lineTo(100, 75);
-  // ctx.lineTo(100, 25);
+  // ctx.arcTo(residentX-50, residentY-60, residentX+50, residentY-20, 20);
+  // ctx.stroke();
   ctx.fillStyle = "Grey";
   ctx.fill();
+  // ctx.fillStyle = "blue";
+  // ctx.fillRect(residentX-50, residentY-60, 10, 10);
+  // ctx.fillRect(residentX+50, residentY-20, 10, 10);
 }
 
 document.addEventListener("keydown", keyDownHandler, false);
