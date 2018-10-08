@@ -76,14 +76,14 @@ function keyUpHandler(e) {
 }
 
 function move() {
-  if(downPressed && residentY < canvas.height) {
-    residentY += 7;
-  } else if(rightPressed && residentX < canvas.width) {
-    residentX += 7;
-  } else if(upPressed && residentY > 0) {
-    residentY -= 7;
-  } else if(leftPressed && residentX > 0) {
-    residentX -= 7;
+  if(downPressed && residentY < canvas.height - 15) {
+    residentY += 10;
+  } else if(rightPressed && residentX < canvas.width - 15) {
+    residentX += 10;
+  } else if(upPressed && residentY > 15) {
+    residentY -= 10;
+  } else if(leftPressed && residentX > 15) {
+    residentX -= 10;
   }
 }
 
@@ -105,4 +105,3 @@ function draw() {
 }
 
 setInterval(draw, 30)
-
