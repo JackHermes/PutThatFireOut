@@ -22,7 +22,22 @@ function drawResident() {
 function drawFire() {
   if(!fireOut) {
     ctx.fillStyle = "#7C0A02";
-    ctx.fillRect(canvas.width/2, canvas.height/2, 10, 10);
+    // Left Triangle
+    ctx.beginPath();
+    ctx.moveTo(canvas.width/2, canvas.height/2);
+    ctx.lineTo(canvas.width/2 - 12, canvas.height/2);
+    ctx.lineTo(canvas.width/2 - 9, canvas.height/2 - 9);
+    // Right Triangle
+    ctx.moveTo(canvas.width/2, canvas.height/2);
+    ctx.lineTo(canvas.width/2 + 12, canvas.height/2);
+    ctx.lineTo(canvas.width/2 + 9, canvas.height/2 - 9);
+    ctx.fill();
+    // Middle Triangle
+    ctx.moveTo(canvas.width/2 - 6, canvas.height/2);
+    ctx.lineTo(canvas.width/2 + 12 - 9, canvas.height/2);
+    ctx.lineTo(canvas.width/2 + 9 - 9, canvas.height/2 - 15);
+    ctx.fill();
+    // ctx.fillRect(canvas.width/2, canvas.height/2, 10, 10);
     // ctx.strokeRect(50,50,50,50);
     // ctx.fill();
   }
