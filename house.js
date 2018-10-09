@@ -10,6 +10,17 @@ let downPressed = false;
 let rightPressed = false;
 let leftPressed = false;
 
+// Create random spot fire placements
+// We want a min of 1 and a max of the smaller of width or height
+const spotsX = [];
+const spotsY = [];
+
+for (let i = 0; i < 10; i++) {
+  spotsX[i] = Math.ceil(Math.random() * (600 - 1) + 1);
+  spotsY[i] = Math.ceil(Math.random() * (600 - 1) + 1);
+}
+
+
 // TODO: Fix the unexpected color behavior
 function drawResident() {
   ctx.beginPath();
@@ -19,23 +30,25 @@ function drawResident() {
   ctx.closePath();
 }
 
-function drawFire() {
+function drawFire(randomIntX, randomIntY) {
+
   if(!fireOut) {
+    console.log(randomIntX, randomIntY);
     ctx.fillStyle = "#7C0A02";
     // Left Triangle
     ctx.beginPath();
-    ctx.moveTo(canvas.width/2, canvas.height/2);
-    ctx.lineTo(canvas.width/2 - 12, canvas.height/2);
-    ctx.lineTo(canvas.width/2 - 9, canvas.height/2 - 9);
+    ctx.moveTo(randomIntX, randomIntY);
+    ctx.lineTo(randomIntX - 12, randomIntY);
+    ctx.lineTo(randomIntX - 9, randomIntY - 9);
     // Right Triangle
-    ctx.moveTo(canvas.width/2, canvas.height/2);
-    ctx.lineTo(canvas.width/2 + 12, canvas.height/2);
-    ctx.lineTo(canvas.width/2 + 9, canvas.height/2 - 9);
+    ctx.moveTo(randomIntX, randomIntY);
+    ctx.lineTo(randomIntX + 12, randomIntY);
+    ctx.lineTo(randomIntX + 9, randomIntY - 9);
     ctx.fill();
     // Middle Triangle
-    ctx.moveTo(canvas.width/2 - 6, canvas.height/2);
-    ctx.lineTo(canvas.width/2 + 12 - 9, canvas.height/2);
-    ctx.lineTo(canvas.width/2 + 9 - 9, canvas.height/2 - 15);
+    ctx.moveTo(randomIntX - 6, randomIntY);
+    ctx.lineTo(randomIntX + 12 - 9, randomIntY);
+    ctx.lineTo(randomIntX + 9 - 9, randomIntY - 15);
     ctx.fill();
     // ctx.fillRect(canvas.width/2, canvas.height/2, 10, 10);
     // ctx.strokeRect(50,50,50,50);
@@ -43,14 +56,20 @@ function drawFire() {
   }
 }
 
+function drawFires() {
+  for(let i = 0; i < 10; i++) {
+    drawFire(spotsX[i], spotsY[i]);
+  }
+}
+
 function drawExtinguisherCone() {
   ctx.beginPath();
-  ctx.moveTo(residentX, residentY-5);
-  ctx.lineTo(residentX-25, residentY-30);
-  ctx.lineTo(residentX-15, residentY-35);
-  ctx.lineTo(residentX, residentY-40);
-  ctx.lineTo(residentX+15, residentY-35);
-  ctx.lineTo(residentX+25, residentY-30);
+  ctx.moveTo(residentX, residentY - 5);
+  ctx.lineTo(residentX - 25, residentY - 30);
+  ctx.lineTo(residentX - 15, residentY - 35);
+  ctx.lineTo(residentX, residentY - 40);
+  ctx.lineTo(residentX + 15, residentY - 35);
+  ctx.lineTo(residentX + 25, residentY - 30);
   // ctx.arcTo(residentX-50, residentY-60, residentX+50, residentY-20, 20);
   // ctx.stroke();
   ctx.fillStyle = "Grey";
@@ -113,7 +132,7 @@ function extinguish() {
 function draw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   drawResident();
-  drawFire();
+  drawFires();
   drawExtinguisherCone();
   extinguish();
   move();
