@@ -1,9 +1,12 @@
+// TODO: consolidate for loops
+//     : add cursor directional control
+
 let canvas = document.getElementById("house");
 let ctx = canvas.getContext("2d");
 let residentX = canvas.width/2;
-let residentY = canvas.height-30;
+let residentY = canvas.height - 30;
 
-let fireOut = false;
+let fireOut = [ false, false, false, false, false, false, false, false, false, false ];
 
 let upPressed = false;
 let downPressed = false;
@@ -30,10 +33,8 @@ function drawResident() {
   ctx.closePath();
 }
 
-function drawFire(randomIntX, randomIntY) {
-
-  if(!fireOut) {
-    console.log(randomIntX, randomIntY);
+function drawFire(randomIntX, randomIntY, index) {
+  if(!fireOut[index]) {
     ctx.fillStyle = "#7C0A02";
     // Left Triangle
     ctx.beginPath();
@@ -58,7 +59,7 @@ function drawFire(randomIntX, randomIntY) {
 
 function drawFires() {
   for(let i = 0; i < 10; i++) {
-    drawFire(spotsX[i], spotsY[i]);
+    drawFire(spotsX[i], spotsY[i], i);
   }
 }
 
@@ -111,22 +112,25 @@ function keyUpHandler(e) {
 
 function move() {
   if(downPressed && residentY < canvas.height - 15) {
-    residentY += 10;
+    residentY += 7;
   } else if(rightPressed && residentX < canvas.width - 15) {
-    residentX += 10;
+    residentX += 7;
   } else if(upPressed && residentY > 15) {
-    residentY -= 10;
+    residentY -= 7;
   } else if(leftPressed && residentX > 15) {
-    residentX -= 10;
+    residentX -= 7;
   }
 }
 
 function extinguish() {
-  // residentX, residentY-40
-  // residentX-25, residentY-30 && residentX+25, residentY-30
-  if(residentX-15 < canvas.width/2 && canvas.width/2 < residentX+15 && residentY-35 < canvas.height/2 && canvas.height/2 < residentY) {
-    fireOut = true;
-  }
+  for(let i = 0; i < 10; i++) {
+    if(
+      /* fire[i]'s X and Y values are (well) within cone's X && Y values  */
+      residentX - 20 < spotsX[i] && spotsX[i] < residentX + 20 && residentY - 25 < spotsY[i] && spotsY[i] < residentY - 7
+    ) {
+      fireOut[i] = true;
+    }
+  };
 }
 
 function draw() {
@@ -136,6 +140,7 @@ function draw() {
   drawExtinguisherCone();
   extinguish();
   move();
+  console.log(fireOut);
 }
 
 setInterval(draw, 30)
