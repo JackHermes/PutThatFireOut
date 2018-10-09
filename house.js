@@ -1,5 +1,5 @@
-// TODO: consolidate for loops
-//     : add cursor directional control
+// TODO: add cursor directional control
+//     : allow multiple buttons/directions to be used
 
 let canvas = document.getElementById("house");
 let ctx = canvas.getContext("2d");
@@ -23,14 +23,24 @@ for (let i = 0; i < 10; i++) {
   spotsY[i] = Math.ceil(Math.random() * (600 - 1) + 1);
 }
 
-
-// TODO: Fix the unexpected color behavior
 function drawResident() {
   ctx.beginPath();
   ctx.arc(residentX, residentY, 10, 0, Math.PI*2);
   ctx.fillStyle = "Green";
   ctx.fill();
   ctx.closePath();
+}
+
+function drawExtinguisherCone() {
+  ctx.beginPath();
+  ctx.moveTo(residentX, residentY - 5);
+  ctx.lineTo(residentX - 25, residentY - 30);
+  ctx.lineTo(residentX - 15, residentY - 35);
+  ctx.lineTo(residentX, residentY - 40);
+  ctx.lineTo(residentX + 15, residentY - 35);
+  ctx.lineTo(residentX + 25, residentY - 30);
+  ctx.fillStyle = "Grey";
+  ctx.fill();
 }
 
 function drawFire(randomIntX, randomIntY, index) {
@@ -51,33 +61,20 @@ function drawFire(randomIntX, randomIntY, index) {
     ctx.lineTo(randomIntX + 12 - 9, randomIntY);
     ctx.lineTo(randomIntX + 9 - 9, randomIntY - 15);
     ctx.fill();
-    // ctx.fillRect(canvas.width/2, canvas.height/2, 10, 10);
-    // ctx.strokeRect(50,50,50,50);
-    // ctx.fill();
   }
 }
 
-function drawFires() {
-  for(let i = 0; i < 10; i++) {
+function drawFires(i) {
     drawFire(spotsX[i], spotsY[i], i);
-  }
 }
 
-function drawExtinguisherCone() {
-  ctx.beginPath();
-  ctx.moveTo(residentX, residentY - 5);
-  ctx.lineTo(residentX - 25, residentY - 30);
-  ctx.lineTo(residentX - 15, residentY - 35);
-  ctx.lineTo(residentX, residentY - 40);
-  ctx.lineTo(residentX + 15, residentY - 35);
-  ctx.lineTo(residentX + 25, residentY - 30);
-  // ctx.arcTo(residentX-50, residentY-60, residentX+50, residentY-20, 20);
-  // ctx.stroke();
-  ctx.fillStyle = "Grey";
-  ctx.fill();
-  // ctx.fillStyle = "blue";
-  // ctx.fillRect(residentX-50, residentY-60, 10, 10);
-  // ctx.fillRect(residentX+50, residentY-20, 10, 10);
+function extinguish(i) {
+  if(
+    // fire[i]'s X and Y values are (well) within cone's X && Y values
+    residentX - 20 < spotsX[i] && spotsX[i] < residentX + 20 && residentY - 30 < spotsY[i] && spotsY[i] < residentY - 7
+  ) {
+    fireOut[i] = true;
+  }
 }
 
 
@@ -122,25 +119,16 @@ function move() {
   }
 }
 
-function extinguish() {
-  for(let i = 0; i < 10; i++) {
-    if(
-      /* fire[i]'s X and Y values are (well) within cone's X && Y values  */
-      residentX - 20 < spotsX[i] && spotsX[i] < residentX + 20 && residentY - 25 < spotsY[i] && spotsY[i] < residentY - 7
-    ) {
-      fireOut[i] = true;
-    }
-  };
-}
 
 function draw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   drawResident();
-  drawFires();
   drawExtinguisherCone();
-  extinguish();
+  for(let i=0; i < 10; i++) {
+    drawFires(i);
+    extinguish(i);
+  }
   move();
-  console.log(fireOut);
 }
 
 setInterval(draw, 30)
