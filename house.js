@@ -1,5 +1,6 @@
 // TODO: add cursor directional control
 //     : allow multiple buttons/directions to be used
+//     : turn on/off extinguisher cone
 
 let canvas = document.getElementById("house");
 let ctx = canvas.getContext("2d");
@@ -84,25 +85,25 @@ document.addEventListener("keyup", keyUpHandler, false);
 // Key codes:
 // left-37; up-38; right-39; down-40
 function keyDownHandler(e) {
-  if(e.keyCode === 40) {
+  if(e.key === "ArrowDown") {
     downPressed = true;
-  } else if(e.keyCode === 39) {
+  } else if(e.key === "ArrowRight") {
     rightPressed = true;
-  } else if(e.keyCode === 38) {
+  } else if(e.key === "ArrowUp") {
     upPressed = true;
-  } else if(e.keyCode === 37) {
+  } else if(e.key === "ArrowLeft") {
     leftPressed = true;
   }
 }
 
 function keyUpHandler(e) {
-  if(e.keyCode === 40) {
+  if(e.key === "ArrowDown") {
     downPressed = false;
-  } else if(e.keyCode === 39) {
+  } else if(e.key === "ArrowRight") {
     rightPressed = false;
-  } else if(e.keyCode === 38) {
+  } else if(e.key === "ArrowUp") {
     upPressed = false;
-  } else if(e.keyCode === 37) {
+  } else if(e.key === "ArrowLeft") {
     leftPressed = false;
   }
 }
