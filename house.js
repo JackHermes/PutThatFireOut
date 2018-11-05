@@ -13,6 +13,7 @@ let upPressed = false;
 let downPressed = false;
 let rightPressed = false;
 let leftPressed = false;
+let spacePressed = false;
 
 // Create random spot fire placements
 // We want a min of 1 and a max of the smaller of width or height
@@ -33,15 +34,17 @@ function drawResident() {
 }
 
 function drawExtinguisherCone() {
-  ctx.beginPath();
-  ctx.moveTo(residentX, residentY - 5);
-  ctx.lineTo(residentX - 25, residentY - 30);
-  ctx.lineTo(residentX - 15, residentY - 35);
-  ctx.lineTo(residentX, residentY - 40);
-  ctx.lineTo(residentX + 15, residentY - 35);
-  ctx.lineTo(residentX + 25, residentY - 30);
-  ctx.fillStyle = "Grey";
-  ctx.fill();
+  if(spacePressed) {
+    ctx.beginPath();
+    ctx.moveTo(residentX, residentY - 5);
+    ctx.lineTo(residentX - 25, residentY - 30);
+    ctx.lineTo(residentX - 15, residentY - 35);
+    ctx.lineTo(residentX, residentY - 40);
+    ctx.lineTo(residentX + 15, residentY - 35);
+    ctx.lineTo(residentX + 25, residentY - 30);
+    ctx.fillStyle = "Grey";
+    ctx.fill();
+  }
 }
 
 function drawFire(randomIntX, randomIntY, index) {
@@ -70,7 +73,7 @@ function drawFires(i) {
 }
 
 function extinguish(i) {
-  if(
+  if( spacePressed && 
     // fire[i]'s X and Y values are (well) within cone's X && Y values
     residentX - 20 < spotsX[i] && spotsX[i] < residentX + 20 && residentY - 30 < spotsY[i] && spotsY[i] < residentY - 7
   ) {
@@ -93,6 +96,8 @@ function keyDownHandler(e) {
     upPressed = true;
   } else if(e.key === "ArrowLeft") {
     leftPressed = true;
+  } else if(e.key === " ") {
+    spacePressed = true;
   }
 }
 
@@ -105,6 +110,8 @@ function keyUpHandler(e) {
     upPressed = false;
   } else if(e.key === "ArrowLeft") {
     leftPressed = false;
+  } else if(e.key === " ") {
+    spacePressed = false;
   }
 }
 
