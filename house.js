@@ -1,6 +1,9 @@
 // TODO: add cursor directional control
 //     : allow multiple buttons/directions to be used
-//     : turn on/off extinguisher cone
+//     : limit extinguisher charge
+//     : add fire resistance/resilience
+//     : add character healthbar
+//     : condense variables into an object or something
 
 let canvas = document.getElementById("house");
 let ctx = canvas.getContext("2d");
@@ -8,6 +11,7 @@ let residentX = canvas.width/2;
 let residentY = canvas.height - 30;
 
 let fireOut = [ false, false, false, false, false, false, false, false, false, false ];
+let extinguisherCharge = 100;
 
 let upPressed = false;
 let downPressed = false;
@@ -35,6 +39,11 @@ function drawResident() {
 
 function drawExtinguisherCone() {
   if(spacePressed) {
+    if(extinguisherCharge > -18) {
+    extinguisherCharge = extinguisherCharge - 1;
+    console.log(extinguisherCharge);
+    }
+
     ctx.beginPath();
     ctx.moveTo(residentX, residentY - 5);
     ctx.lineTo(residentX - 25, residentY - 30);
@@ -44,6 +53,22 @@ function drawExtinguisherCone() {
     ctx.lineTo(residentX + 25, residentY - 30);
     ctx.fillStyle = "Grey";
     ctx.fill();
+  }
+}
+
+function drawExtinguisherCharge() {
+  if(extinguisherCharge > -18) {
+    ctx.beginPath();
+    ctx.fillStyle = "Grey";
+    ctx.fillRect(canvas.width - (0.15 * canvas.width), canvas.height - (0.98 * canvas.height), (0.12 * canvas.width), (0.04 * canvas.width));
+    ctx.beginPath();
+    ctx.clearRect(canvas.width - (0.149 * canvas.width), canvas.height - (0.98 * canvas.height), ((0.10 * canvas.width) - (0.10 * canvas.width * extinguisherCharge / 100)), (0.04 * canvas.width));
+  } else {
+      ctx.beginPath();
+      ctx.fillStyle = "Red";
+      ctx.fillRect(canvas.width - (0.15 * canvas.width), canvas.height - (0.98 * canvas.height), (0.12 * canvas.width), (0.04 * canvas.width));
+      ctx.beginPath();
+      ctx.clearRect(canvas.width - (0.149 * canvas.width), canvas.height - (0.98 * canvas.height), ((0.10 * canvas.width) - (0.10 * canvas.width * extinguisherCharge / 100)), (0.04 * canvas.width));
   }
 }
 
@@ -73,14 +98,14 @@ function drawFires(i) {
 }
 
 function extinguish(i) {
-  if( spacePressed && 
-    // fire[i]'s X and Y values are (well) within cone's X && Y values
+  if( // extinguisher is activated and extinguisherCharge > -18 and...
+    spacePressed && extinguisherCharge > -18 &&
+    // ...fire[i]'s X and Y values are (well) within cone's X && Y values
     residentX - 20 < spotsX[i] && spotsX[i] < residentX + 20 && residentY - 30 < spotsY[i] && spotsY[i] < residentY - 7
   ) {
     fireOut[i] = true;
   }
 }
-
 
 document.addEventListener("keydown", keyDownHandler, false);
 document.addEventListener("keyup", keyUpHandler, false);
@@ -131,7 +156,10 @@ function move() {
 function draw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   drawResident();
-  drawExtinguisherCone();
+  if(extinguisherCharge > -18) {
+    drawExtinguisherCone();
+  }
+  drawExtinguisherCharge();
   for(let i=0; i < 10; i++) {
     drawFires(i);
     extinguish(i);

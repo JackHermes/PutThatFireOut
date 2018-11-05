@@ -1,5 +1,18 @@
+body {
+  font-family: sans-serif;
+}
+
 canvas {
   background: #98AFC7;
   display: block;
+  margin: 0 auto;
+}
+
+div {
+  display:flex;
+  margin: 1em;
+}
+
+p {
   margin: 0 auto;
 }
