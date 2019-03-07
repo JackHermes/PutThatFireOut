@@ -1,9 +1,11 @@
 // TODO: add cursor directional control
 //     : allow multiple buttons/directions to be used
-//     : limit extinguisher charge
 //     : add fire resistance/resilience
 //     : add character healthbar
 //     : condense variables into an object or something
+//     : add points system
+//     : create spreading fire
+//     : smoke?
 
 let canvas = document.getElementById("house");
 let ctx = canvas.getContext("2d");
