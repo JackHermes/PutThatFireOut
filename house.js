@@ -126,6 +126,7 @@ function keyDownHandler(e) {
   } else if(e.key === " ") {
     spacePressed = true;
   }
+  e.preventDefault();
 }
 
 function keyUpHandler(e) {
@@ -140,6 +141,7 @@ function keyUpHandler(e) {
   } else if(e.key === " ") {
     spacePressed = false;
   }
+  e.preventDefault();
 }
 
 function move() {
@@ -152,6 +154,7 @@ function move() {
   } else if(leftPressed && residentX > 15) {
     residentX -= 7;
   }
+  e.preventDefault();
 }
 
 
