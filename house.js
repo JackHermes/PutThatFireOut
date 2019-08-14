@@ -1,11 +1,13 @@
 // TODO: add cursor directional control
-//     : allow multiple buttons/directions to be used
+//     : allow multiple buttons/directions to be used (diagonal too)
 //     : add fire resistance/resilience
 //     : add character healthbar
 //     : condense variables into an object or something
 //     : add points system
 //     : create spreading fire
 //     : smoke?
+//     : add walking animation
+//     : match extinguisher cone with sprite direction/arrow direction
 
 let canvas = document.getElementById("house");
 let ctx = canvas.getContext("2d");
@@ -38,6 +40,37 @@ function drawResident() {
   ctx.fill();
   ctx.closePath();
 }
+
+// Temporary test of sprite animation
+
+let img = new Image();
+img.src = 'https://vxresource.files.wordpress.com/2010/02/char113.png';
+
+function drawSprite() {
+  let width = 30;
+  let height = 32;
+  // ctx.drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight);
+  // source offset to start from; source w + h to use; destination offset to start from; destination w + h to use
+  if(downPressed) {
+    // Down
+    ctx.drawImage(img, width, 0, width, height, 0, 0, width, height);
+  } else if (upPressed) {
+    // Up
+    ctx.drawImage(img, width, height * 3, width, height, 0, 0, width, height);
+  } else if (rightPressed) {
+    // Right
+    ctx.drawImage(img, width, height * 2, width, height, 0, 0, width, height);
+  } else if (leftPressed) {
+    // Left
+    ctx.drawImage(img, width, height, width, height, 0, 0, width, height);
+  } else {
+    // neutral position
+    ctx.drawImage(img, width, height * 3, width, height, 0, 0, width, height);
+  }
+}
+
+
+// end sprite testing zone
 
 function drawExtinguisherCone() {
   if(spacePressed) {
@@ -154,13 +187,13 @@ function move() {
   } else if(leftPressed && residentX > 15) {
     residentX -= 7;
   }
-  e.preventDefault();
 }
 
 
 function draw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   drawResident();
+  drawSprite();
   if(extinguisherCharge > -18) {
     drawExtinguisherCone();
   }
