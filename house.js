@@ -22,6 +22,8 @@ let downPressed = false;
 let rightPressed = false;
 let leftPressed = false;
 let spacePressed = false;
+// Retain previous direction used
+let lastPressed;
 
 // Create random spot fire placements
 // We want a min of 1 and a max of the smaller of width or height
@@ -51,16 +53,16 @@ function drawSprite() {
   let height = 32;
   // ctx.drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight);
   // source offset to start from; source w + h to use; destination offset to start from; destination w + h to use
-  if(downPressed) {
+  if(downPressed || lastPressed === "down") {
     // Down
     ctx.drawImage(img, width, 0, width, height, 0, 0, width, height);
-  } else if (upPressed) {
+  } else if (upPressed || lastPressed === "up") {
     // Up
     ctx.drawImage(img, width, height * 3, width, height, 0, 0, width, height);
-  } else if (rightPressed) {
+  } else if (rightPressed || lastPressed === "right") {
     // Right
     ctx.drawImage(img, width, height * 2, width, height, 0, 0, width, height);
-  } else if (leftPressed) {
+  } else if (leftPressed || lastPressed === "left") {
     // Left
     ctx.drawImage(img, width, height, width, height, 0, 0, width, height);
   } else {
@@ -150,12 +152,16 @@ document.addEventListener("keyup", keyUpHandler, false);
 function keyDownHandler(e) {
   if(e.key === "ArrowDown") {
     downPressed = true;
+    lastPressed = "down";
   } else if(e.key === "ArrowRight") {
     rightPressed = true;
+    lastPressed = "right";
   } else if(e.key === "ArrowUp") {
     upPressed = true;
+    lastPressed = "up";
   } else if(e.key === "ArrowLeft") {
     leftPressed = true;
+    lastPressed = "left";
   } else if(e.key === " ") {
     spacePressed = true;
   }
