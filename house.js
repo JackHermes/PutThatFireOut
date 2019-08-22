@@ -7,7 +7,7 @@
 //     : create spreading fire
 //     : smoke?
 //     : add walking animation
-//     : match extinguisher cone with sprite direction/arrow direction
+//     : match extinguisher cone and extinguish action with sprite direction/arrow direction
 
 let canvas = document.getElementById("house");
 let ctx = canvas.getContext("2d");
@@ -44,7 +44,6 @@ function drawResident() {
 }
 
 // Temporary test of sprite animation
-
 let img = new Image();
 img.src = 'https://vxresource.files.wordpress.com/2010/02/char113.png';
 
@@ -70,28 +69,7 @@ function drawSprite() {
     ctx.drawImage(img, width, height * 3, width, height, 0, 0, width, height);
   }
 }
-
-
 // end sprite testing zone
-
-function drawExtinguisherCone() {
-  if(spacePressed) {
-    if(extinguisherCharge > -18) {
-    extinguisherCharge = extinguisherCharge - 1;
-    console.log(extinguisherCharge);
-    }
-
-    ctx.beginPath();
-    ctx.moveTo(residentX, residentY - 5);
-    ctx.lineTo(residentX - 25, residentY - 30);
-    ctx.lineTo(residentX - 15, residentY - 35);
-    ctx.lineTo(residentX, residentY - 40);
-    ctx.lineTo(residentX + 15, residentY - 35);
-    ctx.lineTo(residentX + 25, residentY - 30);
-    ctx.fillStyle = "Grey";
-    ctx.fill();
-  }
-}
 
 function drawExtinguisherCharge() {
   if(extinguisherCharge > -18) {
@@ -106,6 +84,84 @@ function drawExtinguisherCharge() {
       ctx.fillRect(canvas.width - (0.15 * canvas.width), canvas.height - (0.98 * canvas.height), (0.12 * canvas.width), (0.04 * canvas.width));
       ctx.beginPath();
       ctx.clearRect(canvas.width - (0.149 * canvas.width), canvas.height - (0.98 * canvas.height), ((0.10 * canvas.width) - (0.10 * canvas.width * extinguisherCharge / 100)), (0.04 * canvas.width));
+  }
+}
+
+//  Cone extremes: residentX +/- 25, residentY - 5/residentY - 40
+//  Extinguish extremes: residentX +/- 20, residentY - 7/residentY - 30
+// (slightly smaller box to be sure most/all of fire within visuals for cone
+// when extinguishing)
+function drawExtinguisherCone() {
+  if(spacePressed) {
+    if(extinguisherCharge > -18) {
+      extinguisherCharge = extinguisherCharge - 1;
+      console.log(extinguisherCharge);
+    }
+    if (lastPressed === "down") {
+      // down
+      ctx.beginPath();
+      ctx.moveTo(residentX, residentY + 5);
+      ctx.lineTo(residentX - 25, residentY + 30);
+      ctx.lineTo(residentX - 15, residentY + 35);
+      ctx.lineTo(residentX, residentY + 40);
+      ctx.lineTo(residentX + 15, residentY + 35);
+      ctx.lineTo(residentX + 25, residentY + 30);
+      ctx.fillStyle = "Grey";
+      ctx.fill();
+    } else if (lastPressed === "right") {
+      // right
+      ctx.beginPath();
+      ctx.moveTo(residentX + 5, residentY);
+      ctx.lineTo(residentX + 30, residentY - 25);
+      ctx.lineTo(residentX + 35, residentY - 15);
+      ctx.lineTo(residentX + 40, residentY);
+      ctx.lineTo(residentX + 35, residentY + 15);
+      ctx.lineTo(residentX + 30, residentY + 25);
+      ctx.fillStyle = "Grey";
+      ctx.fill();
+    } else if (lastPressed === "left") {
+      // left
+      ctx.beginPath();
+      ctx.moveTo(residentX - 5, residentY);
+      ctx.lineTo(residentX - 30, residentY + 25);
+      ctx.lineTo(residentX - 35, residentY + 15);
+      ctx.lineTo(residentX - 40, residentY);
+      ctx.lineTo(residentX - 35, residentY - 15);
+      ctx.lineTo(residentX - 30, residentY - 25);
+      ctx.fillStyle = "Grey";
+      ctx.fill();
+    } else {
+      // up
+    ctx.beginPath();
+    ctx.moveTo(residentX, residentY - 5);
+    ctx.lineTo(residentX - 25, residentY - 30);
+    ctx.lineTo(residentX - 15, residentY - 35);
+    ctx.lineTo(residentX, residentY - 40);
+    ctx.lineTo(residentX + 15, residentY - 35);
+    ctx.lineTo(residentX + 25, residentY - 30);
+    ctx.fillStyle = "Grey";
+    ctx.fill();
+    }
+
+  }
+}
+
+function drawFires(i) {
+    drawFire(spotsX[i], spotsY[i], i);
+}
+
+function extinguish(i) {
+  let extinguishUp = residentX - 20 < spotsX[i] && spotsX[i] < residentX + 20 && residentY - 30 < spotsY[i] && spotsY[i] < residentY - 7;
+  let extinguishDown = residentX - 20 < spotsX[i] && spotsX[i] < residentX + 20 && residentY + 7 < spotsY[i] && spotsY[i] < residentY + 30;
+  let extinguishRight =  residentX + 7 < spotsX[i] && spotsX[i] < residentX + 30 && residentY - 20  < spotsY[i] && spotsY[i] < residentY + 20;
+  let extinguishLeft = residentX - 30 < spotsX[i] && spotsX[i] < residentX - 7 && residentY - 20  < spotsY[i] && spotsY[i] < residentY + 20;
+
+  if( // extinguisher is activated and extinguisherCharge > -18 and...
+    spacePressed && extinguisherCharge > -18 &&
+    // ...fire[i]'s X and Y values are (slightly) within cone's X && Y values
+    (extinguishUp || extinguishDown || extinguishRight || extinguishLeft)
+  ) {
+    fireOut[i] = true;
   }
 }
 
@@ -130,19 +186,6 @@ function drawFire(randomIntX, randomIntY, index) {
   }
 }
 
-function drawFires(i) {
-    drawFire(spotsX[i], spotsY[i], i);
-}
-
-function extinguish(i) {
-  if( // extinguisher is activated and extinguisherCharge > -18 and...
-    spacePressed && extinguisherCharge > -18 &&
-    // ...fire[i]'s X and Y values are (well) within cone's X && Y values
-    residentX - 20 < spotsX[i] && spotsX[i] < residentX + 20 && residentY - 30 < spotsY[i] && spotsY[i] < residentY - 7
-  ) {
-    fireOut[i] = true;
-  }
-}
 
 document.addEventListener("keydown", keyDownHandler, false);
 document.addEventListener("keyup", keyUpHandler, false);
